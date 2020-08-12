@@ -1,39 +1,13 @@
+library identifier: 'jenkins-pipeline-demo-library@master', 
+        retriever: modernSCM([$class: 'GitSCMSource', remote: 'https://github.com/sixeyed/jenkins-pipeline-demo-library.git'])
+
 pipeline {
     agent any
-    environment {
-        RELEASE='20.04'
-    }
     stages {
-        stage('Build') {
-            agent any
-            environment {
-                LOG_LEVEL='INFO'
-            }
+        stage('Audit tools') {                        
             steps {
-                echo "Building release ${RELEASE} with log level ${LOG_LEVEL}..."
+                auditTools()
             }
-        }
-        stage('Test') {
-            steps {
-                echo "Testing release ${RELEASE}..."
-            }
-        }
-        stage('Deploy') {
-            input {
-                message 'Deploy?'
-                ok 'Do it!'
-                parameters {
-                    string(name: 'TARGET_ENVIRONMENT', defaultValue: 'PROD', description: 'Target deployment environment')
-                }
-            }
-            steps {
-                echo "Deploying release ${RELEASE} to environment ${TARGET_ENVIRONMENT}"
-            }
-        }        
-    }
-    post{
-        always {
-             echo 'Prints whether deploy happened or not, success or failure'
         }
     }
 }
